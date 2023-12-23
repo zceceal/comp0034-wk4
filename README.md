@@ -14,5 +14,7 @@ This assumes you have already forked the coursework repository and cloned the re
 6. Check that you have an instance folder containing `paralympics.sqlite`
 7. Add data to the database by running `data\add_data.py`
 
+TODO: Why is event missing the id field?
+TODO: Remove the country field from the event table and class
 
 `flask --app paralympics --debug run`

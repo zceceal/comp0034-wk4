@@ -3,19 +3,14 @@ from pathlib import Path
 import sqlite3
 import pandas as pd
 
-# ---------------------------------------------
-# Define and create the database using sqlite3
-# ---------------------------------------------
-
-# Define the database file name and location
-db_file = Path(__file__).parent.joinpath("paralympics.sqlite")
-
-# Connect to the database
+# 1. Create a SQLite database engine that connects to the database file
+db_file = Path(__file__).parent.joinpath("paralympics_v2.sqlite")
 connection = sqlite3.connect(db_file)
 
-# Create a cursor object to execute SQL queries
+# 2. Create a cursor object to execute SQL queries
 cursor = connection.cursor()
 
+# 2. Define the tables in SQL
 # 'region' table definition in SQL
 create_region_table = """CREATE TABLE if not exists region(
                 NOC TEXT PRIMARY KEY,
@@ -44,17 +39,14 @@ create_event_table = """CREATE TABLE if not exists event(
     highlights TEXT,
     FOREIGN KEY(NOC) REFERENCES region(NOC));"""
 
-# Create the tables in the database
+# 4. Execute SQL to create the tables in the database
 cursor.execute(create_region_table)
 cursor.execute(create_event_table)
 
-# Commit the changes
+# 5. Commit the changes to the database (this saves the tables created in the previous step)
 connection.commit()
 
-# -------------------------
-# Add the data using pandas
-# -------------------------
-
+# 6. Import data from CSV to database table using pandas
 # Read the noc_regions data to a pandas dataframe
 na_values = ["",]
 noc_file = Path(__file__).parent.joinpath("noc_regions.csv")
@@ -64,9 +56,9 @@ noc_regions = pd.read_csv(noc_file, keep_default_na=False, na_values=na_values)
 event_file = Path(__file__).parent.joinpath("paralympic_events.csv")
 paralympics = pd.read_csv(event_file)
 
-# Write the data to tables in a sqlite database
+# 7. Write the pandas DataFrame contents to the database tables
 noc_regions.to_sql("region", connection, if_exists="append", index=False)
 paralympics.to_sql("event", connection, if_exists="append", index=False)
 
-# close the database connection
+# 8. Close the database connection
 connection.close()
