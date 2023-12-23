@@ -24,11 +24,12 @@ def get_regions():
     return result
 
 
-@app.get('/regions/<str:code>')
+@app.get('/regions/<code>')
 def get_region(code):
     """ Returns one region in JSON.
 
     :param code: The NOC code of the region to return
+    :param type code: str
     :returns: JSON
     """
     # Query structure shown at https://flask-sqlalchemy.palletsprojects.com/en/3.1.x/queries/#select
@@ -50,11 +51,12 @@ def get_events():
     return result
 
 
-@app.get('/events/<int:event_id>')
+@app.get('/events/<event_id>')
 def get_event(event_id):
     """ Returns the event with the given id JSON.
 
     :param event_id: The id of the event to return
+    :param type event_id: int
     :returns: JSON"""
     event = db.session.execute(db.select(Event).filter_by(id=event_id)).scalar_one()
     result = event_schema.dump(event)
@@ -86,8 +88,7 @@ def add_region():
 
     :returns: JSON"""
     json_data = request.get_json()
-    r_data = region_schema.load(json_data)
-    region = Region(r_data)
+    region = region_schema.load(json_data)
     db.session.add(region)
     db.session.commit()
     return {"message": f"Region added with NOC= {region.NOC}"}

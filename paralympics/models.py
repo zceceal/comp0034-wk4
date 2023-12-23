@@ -37,7 +37,7 @@ class Event(db.Model):
     participants_m: Mapped[int] = mapped_column(db.Integer, nullable=True)
     participants_f: Mapped[int] = mapped_column(db.Integer, nullable=True)
     participants: Mapped[int] = mapped_column(db.Integer, nullable=True)
-    highlights: Mapped[str] = mapped_column(db.Integer, nullable=True)
+    highlights: Mapped[str] = mapped_column(db.String, nullable=True)
 
 
 class User(db.Model):

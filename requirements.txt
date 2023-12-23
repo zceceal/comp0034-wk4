@@ -2,5 +2,4 @@ Flask
 Flask-SQLAlchemy
 Flask-Marshmallow
 marshmallow-sqlalchemy
-bcrypt
 pandas
