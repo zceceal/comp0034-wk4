@@ -2,7 +2,6 @@
 from sqlalchemy import Integer, String, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from paralympics import db
-import bcrypt
 
 
 # This uses the latest syntax for SQLAlchemy, older tutorials will show different syntax
@@ -45,42 +44,3 @@ class User(db.Model):
     id: Mapped[int] = mapped_column(db.Integer, primary_key=True)
     email: Mapped[str] = mapped_column(db.String, unique=True, nullable=False)
     password: Mapped[str] = mapped_column(db.String, unique=True, nullable=False)
-
-    def __init__(self, email: str, password_string: str):
-        """
-        Create a new User object using hashing the plain text password.
-        :type password_string: str
-        :type email: str
-        :returns None
-        """
-        self.email = email
-        self.password = self._hash_password(password_string)
-
-    def __repr__(self):
-        """
-        Returns the attributes of a User as a string, except for the password
-        :returns str
-        """
-        clsname = self.__class__.__name__
-        return f"{clsname}: <{self.id}, {self.email}>"
-
-    @staticmethod
-    def _hash_password(password_string: str):
-        """Hash a password using bcrypt"""  # https://pypi.org/project/bcrypt/
-        # bcrypt requires a byte string, so encode the password
-        password = password_string.encode('utf-8')
-        # generate salt and hash the password
-        salt = bcrypt.gensalt()
-        hashed_password = bcrypt.hashpw(password, salt)
-        return hashed_password
-
-    def set_password(self, password_string: str):
-        """Set a new password for the user"""
-        self.password = self._hash_password(password_string)
-
-    def verify_password(self, password_string: str):
-        """ Verify a password against the stored hash"""
-        # bcrypt requires a byte string, so encode the password
-        password_b = password_string.encode('utf-8')
-        # verify the password against the stored hash
-        return bcrypt.checkpw(password_b, self.password)

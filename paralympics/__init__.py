@@ -1,6 +1,7 @@
 import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_marshmallow import Marshmallow
 from sqlalchemy.orm import DeclarativeBase
 
 
@@ -13,11 +14,16 @@ class Base(DeclarativeBase):
 # Pass a subclass of either DeclarativeBase or DeclarativeBaseNoMeta to the constructor.
 db = SQLAlchemy(model_class=Base)
 
+# Create the Marshmallow instance after SQLAlchemy
+# See https://flask-marshmallow.readthedocs.io/en/latest/#optional-flask-sqlalchemy-integration
+ma = Marshmallow()
+
 
 def create_app(test_config=None):
     # create and configure the app
-    app = Flask(__name__, instance_relative_config=True)
-
+    # https://flask.palletsprojects.com/en/2.3.x/api/#application-object
+    # app = Flask(__name__, instance_relative_config=True)
+    app = Flask('paralympics', instance_relative_config=True)
     app.config.from_mapping(
         # Generate your own SECRET_KEY using python secrets
         SECRET_KEY='l-tirPCf1S44mWAGoWqWlA',
@@ -41,6 +47,9 @@ def create_app(test_config=None):
     # Initialise Flask with the SQLAlchemy database extension
     db.init_app(app)
 
+    # Initialise Flask with the Marshmallow extension
+    ma.init_app(app)
+
     # Models are defined in the models module, so you must import them before calling create_all, otherwise SQLAlchemy
     # will not know about them.
     from paralympics.models import User, Region, Event
@@ -48,5 +57,8 @@ def create_app(test_config=None):
     # create_all does not update tables if they are already in the database.
     with app.app_context():
         db.create_all()
+
+        # Register the routes with the app in the context
+        from paralympics import routes
 
     return app
