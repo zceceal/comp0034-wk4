@@ -3,7 +3,7 @@ from pathlib import Path
 import sqlite3
 import pandas as pd
 
-if __name__ == '__main__':
+def add_data():
     # 1. Create a SQLite database engine that connects to the database file
     db_file = Path(__file__).parent.parent.joinpath("instance", "paralympics.sqlite")
     connection = sqlite3.connect(db_file)

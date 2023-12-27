@@ -1,9 +1,15 @@
 [project]
-name = "comp0034-3"
+name = "paralympics"
 version = "1.0.0"
-description = "COMP0034 Week 3 coding activities"
+description = "Paralympics testing activities"
 dependencies = [
     "flask",
+    "Flask-SQLAlchemy",
+    "Flask-Marshmallow",
+    "marshmallow-sqlalchemy",
+    "pandas",
+    "selenium",
+    "pytest"
 ]
 
 [build-system]
