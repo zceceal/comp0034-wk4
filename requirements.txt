@@ -3,3 +3,5 @@ Flask-SQLAlchemy
 Flask-Marshmallow
 marshmallow-sqlalchemy
 pandas
+pytest
+selenium

@@ -1,4 +1,5 @@
 # Adapted from https://flask-sqlalchemy.palletsprojects.com/en/3.1.x/quickstart/#define-models
+from typing import List
 from sqlalchemy import Integer, String, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from paralympics import db
@@ -11,8 +12,9 @@ class Region(db.Model):
     NOC: Mapped[str] = mapped_column(db.Text, primary_key=True)
     region: Mapped[str] = mapped_column(db.Text, nullable=False)
     notes: Mapped[str] = mapped_column(db.Text, nullable=True)
-    # one-to-many relationship with Event https: // docs.sqlalchemy.org / en / 20 / orm / basic_relationships.html
-    events: Mapped[list["Event"]] = relationship(back_populates="region")
+    # one-to-many relationship with Event
+    # https://docs.sqlalchemy.org/en/20/orm/basic_relationships.html#one-to-many
+    events: Mapped[List["Event"]] = relationship(back_populates="region")
 
 
 class Event(db.Model):
@@ -25,7 +27,7 @@ class Event(db.Model):
     # add ForeignKey to mapped_column(String, primary_key=True)
     NOC: Mapped[str] = mapped_column(ForeignKey("region.NOC"))
     # add relationship to mapped_column(String, primary_key=True)
-    region: Mapped[Region] = relationship("Region", back_populates="events")
+    region: Mapped["Region"] = relationship(back_populates="events")
     start: Mapped[str] = mapped_column(db.Text, nullable=True)
     end: Mapped[str] = mapped_column(db.Text, nullable=True)
     duration: Mapped[int] = mapped_column(db.Integer, nullable=True)

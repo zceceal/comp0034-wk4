@@ -33,7 +33,7 @@ def get_region(code):
     :returns: JSON
     """
     # Query structure shown at https://flask-sqlalchemy.palletsprojects.com/en/3.1.x/queries/#select
-    region = user = db.session.execute(db.select(Region).filter_by(NOC=code)).scalar_one()
+    region = db.session.execute(db.select(Region).filter_by(NOC=code)).scalar_one()
     # Dump the data using the Marshmallow region schema; '.dump()' returns JSON.
     result = region_schema.dump(region)
     # Return the data in the HTTP response
