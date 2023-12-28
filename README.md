@@ -55,36 +55,11 @@ You may also need to configure your IDE to support running pytest tests, follow 
 
 ### 3. Install your app code
 
-You should have an a `pyproject.toml`.
+This uses `pyproject.toml` which has metadata about your project code and how to configure pytest.
 
-In the Terminal of your IDE, install your code using `pip install -e .`
+In the Terminal of your IDE, install the paralympics code using `pip install -e .`
 
 Note: The `.` is part of the command and not a typo!
-
-If you don't have a `pyproject.toml` then you need to create one. Include the following:
-
-```toml
-[project]
-name = "paralympics"
-
-[build-system]
-requires = [
-    "setuptools>=65.0",
-    "setuptools-scm[toml]>=6.2.3",
-]
-build-backend = "setuptools.build_meta"
-
-# See https://flask.palletsprojects.com/en/2.3.x/tutorial/tests/#running-the-tests
-[tool.pytest.ini_options]
-testpaths = ["tests"]
-filterwarnings = [
-    "error",
-]
-
-[tool.coverage.run]
-branch = true
-source = ["paralympics"]
-```
 
 ## Test the REST API routes using the Flask test client and pytest
 
