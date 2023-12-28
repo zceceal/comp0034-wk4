@@ -98,9 +98,6 @@ def add_data_from_csv():
             csv_reader = csv.reader(file)
             next(csv_reader)  # Skip header row
             for row in csv_reader:
-                # row[0] is the first column, row[1] is the second column etc
-                # type0,year1,country2,host3,NOC4,start5,end6,duration7,disabilities_included8,countries9,events10,
-                # sports11,participants_m12,participants_f13,participants14,highlights15
                 e = Event(type=row[0],
                           year=row[1],
                           country=row[2],
