@@ -12,14 +12,10 @@ This assumes you have already forked the coursework repository and cloned the re
 4. Open a browser and go to http://127.0.0.1:5000/regions
 5. Stop the app using `CTRL+C`
 6. Check that you have an instance folder containing `paralympics.sqlite`
-7. Add data to the database by running `data\add_data.py`
 
 ## Overview
 
-This tutorial focuses on functional testing covering:
-
-1. The Flask routes
-2. Simulated user behaviour when using the app in a web browser
+This tutorial focuses on functional testing covering the Flask API routes.
 
 Refer to the COMP0035 week 9 tutorial for:
 
@@ -36,13 +32,13 @@ Refer to the COMP0035 week 9 tutorial for:
 
 To do this you need to:
 
-1. Install pytest and Selenium
+1. Install pytest
 2. Create a tests directory and test files
 3. Install your app code
 
-### 1. Install pytest and selenium
+### 1. Install pytest
 
-Make sure you have installed pytest and selenium in your Python environment e.g.: `pip install pytest selenium`
+Make sure you have installed pytest and selenium in your Python environment e.g.: `pip install pytest`
 
 You may also need to configure your IDE to support running pytest tests, follow the relevant documentation:
 
@@ -54,19 +50,18 @@ You may also need to configure your IDE to support running pytest tests, follow 
 - Create a folder called `tests`. Refer to
   the [pytest documentation](https://docs.pytest.org/en/7.1.x/explanation/goodpractices.html#choosing-a-test-layout-import-rules)
   for alternate test directory structures.
-- Create a Python test file in the `tests` folder called `test_routes.py` and another called `test_browser.py`. You will
-  add the tests to this.
+- Create a Python test file in the `tests` folder called `test_routes.py`. You will add the tests to this.
 - Create an empty Python file in the `tests` folder called `conftest.py`. You will add the fixtures to this.
 
 ### 3. Install your app code
 
 You should have an a `pyproject.toml`.
 
-In the Terminal of your IDE, install your code using `pip unstall -e .`
+In the Terminal of your IDE, install your code using `pip install -e .`
 
 Note: The `.` is part of the command and not a typo!
 
-If you don't have a `pyproject.toml` then you need to create one. The minimum you need is:
+If you don't have a `pyproject.toml` then you need to create one. Include the following:
 
 ```toml
 [project]
@@ -78,6 +73,17 @@ requires = [
     "setuptools-scm[toml]>=6.2.3",
 ]
 build-backend = "setuptools.build_meta"
+
+# See https://flask.palletsprojects.com/en/2.3.x/tutorial/tests/#running-the-tests
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+filterwarnings = [
+    "error",
+]
+
+[tool.coverage.run]
+branch = true
+source = ["paralympics"]
 ```
 
 ## Test the REST API routes using the Flask test client and pytest
@@ -437,55 +443,15 @@ def test_delete_region(client, new_region):
 
 ```
 
-### Write tests for the Event routes
+## Write tests for the Event routes
 
 Try and write tests similar to the above Region routes for the Event routes.
 
 Tests for errors will fail as the error handling required in the routes has not yet been applied, this will be
-covered in week 5 tutorial.
+covered in the week 5 tutorial.
 
-## Test the REST API routes from a browser using Selenium Webdriver and pytest
+## Don't forget COMP0035 testing
+Also consider:
 
-To test from the browser you will use a combination of:
-
-- [Flask test client](https://flask.palletsprojects.com/en/3.0.x/testing/#fixtures) to create a running Flask app in a
-  Pytest fixture
-- [Selenium webdriver](https://www.selenium.dev/documentation/webdriver/) to launch and navigate the browser interface (
-  i.e. to simulate user clicks and interactions)
-- [Chrome driver](https://chromedriver.chromium.org/downloads) to allow Selenium to work with Chrome browser. The
-  Selenium webdriver passes commands to the browser
-  through the Chrome driver, and receives information back via the same route.
-- [Pytest](https://docs.pytest.org/en/7.1.x/explanation/goodpractices.html#choosing-a-test-layout-import-rules) for test
-  assertions
-
-### Check Chrome driver works
-
-You will use the Chrome browser for this tutorial, though Selenium supports a number of browsers (Firefox, Safari,
-Edge).
-
-In mid-2023, Chromium.org changed how the Chrome Driver works. Also from Selenium version 4.6 it is no longer required
-to
-explicitly download Chrome Driver.
-
-As a result of the above two changes, any tutorials before mid to late 2023 that explain how to set-up the Chrome driver
-will be misleading.
-
-In `test_browser.py` add the following code:
-
-```python
-from selenium import webdriver
-
-# Create a Chrome driver
-driver = webdriver.Chrome()
-# Use the driver to navigate to the Google home page
-driver.get("https://www.google.com/")
-# Wait for 3 seconds
-driver.implicitly_wait(3)
-```
-
-Run the code. It should launch Chrome, go to the Google home page and wait for 3 seconds.
-
-## Reading
-
-https://www.sisense.com/blog/rest-api-testing-strategy-what-exactly-should-you-test/
-https://testdriven.io/blog/flask-pytest/ Patrick Kennedy. Testing Flask applications.
+- Setting up a GitHub Actions workflow to run the tests
+- 
