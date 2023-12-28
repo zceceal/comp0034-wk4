@@ -24,9 +24,9 @@ class Event(db.Model):
     year: Mapped[int] = mapped_column(db.Integer, nullable=False)
     country: Mapped[str] = mapped_column(db.Text, nullable=False)
     host: Mapped[str] = mapped_column(db.Text, nullable=False)
-    # add ForeignKey to mapped_column(String, primary_key=True)
+    # add ForeignKey that maps to the primary key of the Region table
     NOC: Mapped[str] = mapped_column(ForeignKey("region.NOC"))
-    # add relationship to mapped_column(String, primary_key=True)
+    # add relationship to Region, this references the relationship 'events' that is in the Region table
     region: Mapped["Region"] = relationship(back_populates="events")
     start: Mapped[str] = mapped_column(db.Text, nullable=True)
     end: Mapped[str] = mapped_column(db.Text, nullable=True)
