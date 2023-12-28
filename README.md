@@ -369,22 +369,30 @@ Add a new pytest fixture to add a new region to the database:
 
 ```python
 import pytest
-from paralympics import db, app
+from sqlalchemy import exists
+from paralympics import db
 from paralympics.models import Region
 
 
 @pytest.fixture(scope='function')
 def new_region(app):
     """Create a new region and add to the database.
+
     Adds a new Region to the database and also returns an instance of that Region object.
     """
     new_region = Region(NOC='NEW', notes=None, region='A new region')
-
     with app.app_context():
         db.session.add(new_region)
         db.session.commit()
 
     yield new_region
+
+    # Remove the region from the database at the end of the test if it still exists
+    with app.app_context():
+        region_exists = db.session.query(exists().where(Region.NOC == 'NEW')).scalar()
+        if region_exists:
+            db.session.delete(new_region)
+            db.session.commit()
 ```
 
 Add a test for the PATCH route that uses the new fixture:
@@ -392,14 +400,15 @@ Add a test for the PATCH route that uses the new fixture:
 ```python
 def test_patch_region(client, new_region):
     """
-        GIVEN an existing Region with code NEW and notes=None
+        GIVEN an existing region
         AND a Flask test client
         WHEN an UPDATE request is made to /regions/<noc-code> with notes json
         THEN the response status code should be 200
-        AND the response content should include the message 'Region NEW updated'
+        AND the response content should include the message 'Region <NOC_code> updated'
     """
     new_region_notes = {'notes': 'An updated note'}
-    response = client.patch("/regions/NEW", json=new_region_notes)
+    code = new_region['NOC']
+    response = client.patch(f"/regions/{code}", json=new_region_notes)
     assert response.json['message'] == 'Region NEW updated.'
     assert response.status_code == 200
 ```
@@ -412,6 +421,19 @@ is added to the PATCH route which will be covered in week 5.
 This uses the 'new region' fixture you created for the PATCH route test.
 
 ```python
+def test_delete_region(client, new_region):
+    """
+    GIVEN an existing region in JSON format
+    AND a Flask test client
+    WHEN a DELETE request is made to /regions/<noc-code>
+    THEN the response status code should be 200
+    AND the response content should include the message 'Region {noc_code} deleted.'
+    """
+    # Get the NOC code from the JSON which is returned in the new_region fixture
+    code = new_region['NOC']
+    response = client.delete(f"/regions/{code}")
+    assert response.status_code == 200
+    assert response.json['message'] == 'Region NEW deleted.'
 
 ```
 
