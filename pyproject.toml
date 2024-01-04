@@ -8,7 +8,6 @@ dependencies = [
     "Flask-Marshmallow",
     "marshmallow-sqlalchemy",
     "pandas",
-    "selenium",
     "pytest"
 ]
 
