@@ -110,7 +110,8 @@ def delete_event(event_id):
 def delete_region(noc_code):
     """ Deletes the region with the given code.
 
-    :param code: The NOC code of the region to delete
+    <noc_code> is the NOC code of the region to delete.
+
     :returns: JSON"""
     region = db.session.execute(db.select(Region).filter_by(NOC=noc_code)).scalar_one()
     db.session.delete(region)
@@ -120,7 +121,8 @@ def delete_region(noc_code):
 
 @app.patch("/events/<event_id>")
 def event_update(event_id):
-    """Updates changed fields for the event.
+    """
+    Updates changed fields for the event.
 
     """
     # Find the event in the database
@@ -130,9 +132,9 @@ def event_update(event_id):
     # Get the updated details from the json sent in the HTTP patch request
     event_json = request.get_json()
     # Use Marshmallow to update the existing records with the changes from the json
-    event_update = event_schema.load(event_json, instance=existing_event, partial=True)
+    event_updated = event_schema.load(event_json, instance=existing_event, partial=True)
     # Commit the changes to the database
-    db.session.add(event_update)
+    db.session.add(event_updated)
     db.session.commit()
     # Return json showing the updated record
     updated_event = db.session.execute(
@@ -156,9 +158,9 @@ def region_update(noc_code):
     # Get the updated details from the json sent in the HTTP patch request
     region_json = request.get_json()
     # Use Marshmallow to update the existing records with the changes from the json
-    region_update = region_schema.load(region_json, instance=existing_region, partial=True)
+    region_updated = region_schema.load(region_json, instance=existing_region, partial=True)
     # Commit the changes to the database
-    db.session.add(region_update)
+    db.session.add(region_updated)
     db.session.commit()
     # Return json showing the updated record
     updated_region = db.session.execute(
