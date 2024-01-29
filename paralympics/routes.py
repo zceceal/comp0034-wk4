@@ -170,6 +170,8 @@ def region_update(noc_code):
         db.select(Region).filter_by(NOC=noc_code)
     ).scalar_one_or_none()
 
+    print(existing_region)
+
     # Get the updated details from the json sent in the HTTP patch request
     region_json = request.get_json()
 
@@ -177,10 +179,19 @@ def region_update(noc_code):
     if request.method == 'PATCH':
         r = region_schema.load(region_json, instance=existing_region, partial=True)
     if request.method == 'PUT':
-        try:
-            r = region_schema.load(region_json, instance=existing_region)
-        except ValidationError as err:
-            return err.messages, 400
+        # If the region exists, update it
+        if existing_region:
+            try:
+                r = region_schema.load(region_json, instance=existing_region)
+            except ValidationError as err:
+                return err.messages, 400
+        else:
+            # If it doesn't exist add a new region if all the necessary field values are provided
+            try:
+                r = region_schema.load(region_json)
+                return {"message": f"Region added with NOC= {noc_code}"}
+            except ValidationError as err:
+                return err.messages, 400
 
     # Commit the changes to the database
     db.session.add(r)
