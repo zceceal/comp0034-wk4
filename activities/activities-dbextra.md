@@ -37,8 +37,6 @@ See [complexdb/schemas.py](/complexdb/schemas.py)
 These have some added complexity as the Schemas are nested to represent the relations between objects. See
 the [documentation](https://marshmallow.readthedocs.io/en/stable/nesting.html#nesting-schemas).
 
-This was a little tricky to implement as the syntax at the link above is for Marshmallow whereas the
-
 ## Create the database in \__init\__.py
 
 See [/complexdb/\__init\__.py](/complexdb/__init__.py)
@@ -56,6 +54,5 @@ See [/complexdb/routes.py](/complexdb/routes.py)
 GET route added to routes.py to show the usage.
 Run the app and go to /predictions
 
-The PATCH route will be more complex as you have to work out the logic to handle updating fields in 3 tables (DELETE
-should be easier). Look at the code in the 'add_data' function of db_utils that this uses the SQLAlchemy relationships
-to find related records. I am not going to give the code for this, you need to work it out!
+The PATCH route may be more complex as you have to work out the logic to handle updating fields in 3 tables (DELETE
+should be easier).
