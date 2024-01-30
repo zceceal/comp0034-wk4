@@ -1,6 +1,4 @@
 import os
-import csv
-from pathlib import Path
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
@@ -25,7 +23,7 @@ def create_app(test_config=None):
     # create and configure the app
     # https://flask.palletsprojects.com/en/2.3.x/api/#application-object
     # app = Flask(__name__, instance_relative_config=True)
-    app = Flask('paralympics', instance_relative_config=True)
+    app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         # Generate your own SECRET_KEY using python secrets
         SECRET_KEY='l-tirPCf1S44mWAGoWqWlA',
