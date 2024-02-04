@@ -53,14 +53,14 @@ def get_events():
     return result
 
 
-@app.get('/events/<event_id>')
-def get_event(event_id):
+#@app.get('/events/<event_id>')
+#def get_event(event_id):
     """ Returns the event with the given id JSON.
 
     :param event_id: The id of the event to return
     :param type event_id: int
     :returns: JSON"""
-    event = db.session.execute(db.select(Event).filter_by(id=event_id)).scalar_one()
+ #   event = db.session.execute(db.select(Event).filter_by(id=event_id)).scalar_one()
     result = event_schema.dump(event)
     return result
 
@@ -106,6 +106,7 @@ def delete_event(event_id):
     db.session.delete(event)
     db.session.commit()
     return {"message": f"Event {event_id} deleted"}
+
 
 
 @app.delete('/regions/<noc_code>')
